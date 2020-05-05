@@ -21,8 +21,11 @@ def login_view(request):
             ).distinct().first()
 
             if check_password(password, user_final_qs.password):
-                login(request,user_final_qs)
-                return redirect("home")
+                if user_final_qs.is_active is True:
+                    login(request,user_final_qs)
+                    return redirect("home")
+                else:
+                    messages.info(request, "user inactive")
             else:
                 messages.info(request, "invalid credential")
         else:
